@@ -337,6 +337,43 @@ footer { border-top: 1px solid var(--line); padding-block: 80px 40px; }
   .page-head > *, .work > *, .split > *, .about-cols > *, .artist > *, .acquire .row > * { grid-column: 1 / -1 !important; min-width: 0; }
 }
 
+
+/* ===== single-page additions ===== */
+.nav ul{display:none!important}.menu-btn{display:none!important}.mobile-menu{display:none!important}
+.dock{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:60;display:flex;gap:4px;padding:6px;border-radius:999px;background:rgba(248,247,244,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 8px 30px rgba(17,17,17,.14),0 0 0 1px rgba(17,17,17,.06)}
+.dock a{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:14px 22px;border-radius:999px;color:var(--ink);transition:background .3s,color .3s}
+.dock a.on,.dock a:hover{background:var(--ink);color:#fff}
+.sec{scroll-margin-top:80px}
+.sec-top{padding-block:clamp(72px,9vw,128px) 0}
+.sec-intro{display:grid;grid-template-columns:repeat(12,1fr);gap:32px;align-items:end;margin-bottom:clamp(40px,5vw,72px)}
+.sec-intro>div{grid-column:1/span 7}.sec-intro>p{grid-column:9/span 4;color:var(--muted);max-width:40ch}
+.sec-intro h2{font-size:clamp(52px,7vw,112px);line-height:.95;text-transform:uppercase}
+@media(max-width:767px){.sec-intro>div,.sec-intro>p{grid-column:1/-1}.sec-intro h2{font-size:15vw}}
+.fold{position:relative}
+.fold:not(.open) .grid::after{content:"";position:absolute;left:calc(var(--gutter)*-1);right:calc(var(--gutter)*-1);bottom:0;height:min(46%,340px);background:linear-gradient(180deg,rgba(248,247,244,0),var(--ivory) 88%);pointer-events:none;z-index:3}
+.fold .grid{position:relative}
+.fold-btn{display:flex;margin:clamp(-8px,-1vw,0px) auto 0;position:relative;z-index:4}
+.fold.open .fold-btn{display:none}
+@media(max-width:639px){.fold:not(.open) .card.h3{display:none}}
+@media(min-width:640px) and (max-width:1099px){.fold:not(.open) .card.h4{display:none}}
+@media(min-width:1100px){.fold:not(.open) .card.h6{display:none}.fold:not(.open) .arow:nth-child(n+3){display:none}}
+.btn-round{border-radius:999px}
+.na{display:inline-block;margin-top:12px;padding:7px 16px;border:1px solid var(--line);border-radius:999px;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);background:rgba(255,255,255,.7)}
+.sold-note{display:block}
+.track{align-items:center!important}
+.gallery-band{text-align:center}
+.gallery-band img{width:min(100%,1040px)!important;max-height:72vh;object-fit:cover;margin-inline:auto;display:block}
+.gallery-band p{text-align:center}
+#about .page{padding-block:clamp(72px,9vw,120px) 64px}
+#contact .page{padding-block:clamp(72px,9vw,120px) 96px}
+@media(max-width:767px){
+  .mgrid{display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-inline:calc(var(--gutter)*-1);padding-inline:var(--gutter);scrollbar-width:none}
+  .mgrid::-webkit-scrollbar{display:none}
+  .mgrid figure{flex:none;width:76vw!important;scroll-snap-align:center;justify-self:auto!important}
+  .mgrid img{height:62vw;object-fit:cover!important}
+  body{padding-bottom:84px}
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .reveal, .mask { opacity: 1; transform: none; clip-path: none; }
@@ -349,20 +386,8 @@ footer { border-top: 1px solid var(--line); padding-block: 80px 40px; }
 <a href="#main" class="label" style="position:absolute;left:-9999px">Skip to content</a>
 <header class="nav" id="nav">
   <a href="./" class="logo" aria-label="ARTBYMARC, home"><img src="logo.png" alt="ARTBYMARC" width="900" height="189"></a>
-  <nav aria-label="Main"><ul>
-    <li><a class="label link-line" data-nav="artworks" href="#artworks">Artworks</a></li>
-    <li><a class="label link-line" data-nav="archive" href="#archive">Archive</a></li>
-    <li><a class="label link-line" data-nav="about" href="#about">About</a></li>
-    <li><a class="label link-line" data-nav="contact" href="#contact">Contact</a></li>
-  </ul></nav>
-  <button class="menu-btn label" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu"><span id="menuLabel">Menu</span><span class="bars" aria-hidden="true"></span></button>
 </header>
-<div class="mobile-menu" id="mobileMenu">
-  <ul>
-    <li><a href="#artworks">Artworks</a></li><li><a href="#archive">Archive</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li>
-  </ul>
-  <p class="label muted">Contemporary Art</p>
-</div>
+<div class="dock" id="dock" aria-label="Quick menu"><a href="#artworks" data-dock="artworks">Artworks</a><a href="#contact" data-dock="contact">Contact</a></div>
 
 <main id="main"></main>
 
@@ -409,7 +434,7 @@ const realEq = w => {
 const shortDesc = t => { const s = (t || "").match(/[^.!?]+[.!?]+/g) || [t || ""]; let out = ""; for (const x of s) { if ((out + x).length > 150 && out) break; out += x; } return out.trim(); };
 const REAL_MAX = Math.max(...ALL.map(realEq));
 const realPct = w => { const e = realEq(w); return e ? Math.max(32, Math.min(100, Math.round(e / REAL_MAX * 100))) : 100; };
-const card = (w, i, k) => `<a class="card reveal" style="--d:${(i % 3) * 90}ms" href="#work-${w.slug}"><div class="art-hover" style="--pw:${realPct(w)};--k:${k || 1}">${img(w, "", true)}</div><span class="t"><span class="link-line">${esc(w.title)}</span></span>${w.dims ? `<span class="dim">${esc(w.dims.cm)}${w.dims.in ? ` <span class="dim-in">/ ${esc(w.dims.in)}</span>` : ""}</span>` : ""}</a>`;
+const card = (w, i, k, idx, sold) => `<a class="card reveal${idx >= 3 ? " h3" : ""}${idx >= 4 ? " h4" : ""}${idx >= 6 ? " h6" : ""}" style="--d:${(i % 3) * 90}ms" href="#work-${w.slug}"><div class="art-hover" style="--pw:${realPct(w)};--k:${k || 1}">${img(w, "", true)}</div><span class="t"><span class="link-line">${esc(w.title)}</span></span>${w.dims ? `<span class="dim">${esc(w.dims.cm)}${w.dims.in ? ` <span class="dim-in">/ ${esc(w.dims.in)}</span>` : ""}</span>` : ""}${sold ? '<span class="na">Not available</span>' : ""}</a>`;
 
 function viewHome() {
   const h = DATA.home, hero = byId[h.heroArtwork] || W[0], red = byId[h.redArtwork] || hero;
@@ -437,6 +462,9 @@ function viewHome() {
     <div class="slider-foot gutter"><div class="progress"><span id="prog"></span></div><div class="arrows"><button class="arrow-btn" data-prev aria-label="Previous artworks">${svgArrow("prev")}</button><button class="arrow-btn" data-next aria-label="Next artworks">${svgArrow("next")}</button></div></div>
   </section>
 
+  ${viewArtworksSec()}
+  ${viewArchiveSec()}
+
   <section class="red-sec" id="red" aria-labelledby="redTitle">
     <div class="red-in gutter">
       <div>
@@ -455,15 +483,16 @@ function viewHome() {
     <p class="gutter label muted" style="margin-top:16px">On view — The Joker, Ben &amp; Jerry’s Moment and Balenciaga Duck in the gallery</p>
   </section>` : ""}
 
-  <section class="artist gutter" aria-labelledby="artistTitle">
-    <div class="pic mask">${a.portraitImg ? `<img src="${a.portraitImg.src}" width="${a.portraitImg.w}" height="${a.portraitImg.h}" alt="${esc(a.portraitAlt)}" loading="lazy">` : ""}</div>
-    <div class="txt reveal"><p id="artistTitle" class="label muted" style="margin-bottom:20px">04 — ${esc(h.aboutHeading)}</p><p class="big">${esc(h.aboutText)}</p><a class="btn btn-line" href="#about">${esc(h.aboutCta)} ${arrow}</a></div>
-  </section>
+  ${viewAboutSec()}
+  ${viewMomentsSec()}
+
+  
 
   <section class="acquire gutter" aria-labelledby="acqTitle">
     <div class="reveal"><p class="label" style="color:rgba(255,255,255,.5);margin-bottom:32px">05 — Private acquisitions</p><h2 id="acqTitle" class="display">${italicLast(h.acquireHeading)}</h2></div>
     <div class="row reveal"><div><p>${esc(h.acquireText)}</p><a class="btn btn-light" href="#contact">${esc(h.acquireCta)} ${arrow}</a></div></div>
-  </section>`;
+  </section>
+  ${viewContactSec()}`;
 }
 
 const ART_ORDER = ["three-wise-monkeys", "pop-culture-explosion", "scarlet-leopard", "lucky-day", "ben-and-jerrys-moment", "money-tree", "stop-staring", "the-joker", "lady-in-white", "supreme-tagger", "riviera-pool-day"];
@@ -474,17 +503,28 @@ function viewArtworks() {
     <div class="grid arows">${archiveRows(WART)}</div></div>`;
 }
 
-const archiveRows = list => {
+const archiveRows = (list, sold) => {
   const out = [];
   for (let i = 0; i < list.length; i += 3) {
     const r = list.slice(i, i + 3), e = r.map(realEq);
     let pat = "even", k = [1, 1, 1];
     if (r.length === 3 && e[1] >= e[0] && e[1] >= e[2]) { pat = "sbs"; k = [1.6, 1, 1.6]; }
     else if (r.length === 3 && e[0] > e[1] && e[2] > e[1]) { pat = "bsb"; k = [1, 1.6, 1]; }
-    out.push(`<div class="arow ${pat}">${r.map((w, j) => card(w, j, k[j])).join("")}</div>`);
+    out.push(`<div class="arow ${pat}">${r.map((w, j) => card(w, j, k[j], i + j, sold)).join("")}</div>`);
   }
   return out.join("");
 };
+const foldBtn = '<div style="text-align:center;margin-top:8px"><button class="btn btn-dark btn-round fold-btn" type="button" data-fold>Show more</button></div>';
+function viewArtworksSec() {
+  return `<section class="sec sec-top gutter" id="artworks" aria-labelledby="artTitle"><div class="sec-intro"><div><p class="label muted" style="margin-bottom:20px">02 — Collection</p><h2 id="artTitle" class="display">Artworks</h2></div>
+    <p>Every painting is an original, made by hand and existing only once. Select a work to see its details and enquire privately.</p></div>
+    <div class="fold"><div class="grid arows">${archiveRows(WART)}</div>${foldBtn}</div></section>`;
+}
+function viewArchiveSec() {
+  return `<section class="sec sec-top gutter" id="archive" aria-labelledby="archTitle" style="padding-bottom:clamp(72px,9vw,128px)"><div class="sec-intro"><div><p class="label muted" style="margin-bottom:20px">Earlier work · ${ARCH.length} works</p><h2 id="archTitle" class="display">Archive</h2></div>
+    <p>Earlier paintings, now in private collections and no longer available. Kept here as a record of how the work has developed.</p></div>
+    <div class="fold"><div class="grid arows">${archiveRows(ARCH, true)}</div>${foldBtn}</div></section>`;
+}
 function viewArchive() {
   return `<div class="page gutter" style="--gutter:clamp(10px,2vw,28px)"><header class="page-head"><div><p class="label muted enter" style="margin-bottom:24px">Earlier work</p><h1 class="display enter" style="--d:120ms">Archive</h1></div>
     <p class="enter" style="--d:240ms">Earlier paintings and works now in private collections, kept here as a record of how the work has developed.<br><a class="label link-line" style="display:inline-block;margin-top:20px" href="https://works.artbymarc.net" target="_blank" rel="noopener">Selected works &rarr; works.artbymarc.net</a></p></header>
@@ -541,6 +581,33 @@ function viewAbout() {
     <section class="acquire gutter"><div class="reveal" style="display:grid;gap:40px"><h2 class="display">Let's talk <em>art.</em></h2><div><a class="btn btn-light" href="#contact">Contact the studio ${arrow}</a></div></div></section>`;
 }
 
+function viewAboutSec() {
+  const a = DATA.about, paras = t => (t || "").split(/\n\s*\n/).map(p => `<p>${esc(p.trim())}</p>`).join("");
+  const feature = a.safariFeature;
+  return `<div class="sec" id="about"><section class="page gutter" style="padding-bottom:96px"><div class="split">
+      <div class="l"><h1 class="label muted enter" style="font-size:11px;font-family:var(--sans);line-height:1.6">About Mark Caraian</h1><p class="statement enter" style="--d:160ms">${esc(a.statement)}</p></div>
+      <div class="r enter-mask" style="--d:300ms">${a.portraitImg ? `<img src="${a.portraitImg.src}" width="${a.portraitImg.w}" height="${a.portraitImg.h}" alt="${esc(a.portraitAlt)}">` : ""}</div></div></section>
+    <section class="about-cols gutter"><div class="reveal"><h2 class="label muted" style="margin-bottom:32px">${esc(a.approachHeading)}</h2><div class="prose">${paras(a.approach)}</div></div>
+      <div class="reveal" style="--d:120ms"><h2 class="label muted" style="margin-bottom:32px">${esc(a.processHeading)}</h2><div class="prose">${paras(a.process)}</div></div></section>
+    ${(a.exhibitions || []).length ? `<section class="exhibition-history gutter" aria-labelledby="exhibitionTitle">
+      <div class="exhibition-heading"><p class="label muted">Selected exhibitions &amp; projects</p><h2 id="exhibitionTitle" class="display">Exhibitions, 2018–2023.</h2></div>
+      <div class="exhibition-layout">
+        ${feature ? `<div class="exhibition-feature reveal"><figure><img src="${feature.src}" width="${feature.w}" height="${feature.h}" alt="${esc(feature.alt)}" loading="lazy"><figcaption class="label muted">Art Safari · promotional campaign artwork · 2021</figcaption></figure><div class="exhibition-feature-copy"><p class="label muted">2021 · Bucharest</p><h3>Art Safari</h3><p>Second participation. Paintings were exhibited, and one work was selected for the edition’s promotional campaign.</p></div></div>` : ""}
+        <div class="exhibition-list">${a.exhibitions.map((e, i) => `<article class="exhibition-entry reveal" style="--d:${(i % 3) * 70}ms"><span class="exhibition-year">${esc(e.year)}</span><div><h3>${esc(e.title)}</h3><p>${esc(e.detail)}</p></div></article>`).join("")}</div>
+      </div>
+    </section>` : ""}
+    </div>`;
+}
+function viewMomentsSec() {
+  const a = DATA.about;
+  return `${(a.moments || []).length ? `<section class="gutter moments" aria-labelledby="momTitle">
+      <p class="label muted" style="margin-bottom:20px">In the gallery</p>
+      <h2 id="momTitle" class="display" style="font-size:clamp(44px,5vw,64px);margin-bottom:48px">On the gallery wall</h2>
+      <div class="mgrid">${a.moments.map((m, i) => `<figure class="reveal m${i}" style="--d:${(i % 2) * 90}ms"><img src="${m.src}" width="${m.w}" height="${m.h}" alt="${esc(m.cap)}" loading="lazy"><figcaption class="label muted">${esc(m.cap)}</figcaption></figure>`).join("")}</div>
+      <p class="label muted" style="margin-top:24px;font-size:10px">Photos: RoZa Zah</p>
+    </section>` : ""}
+    `;
+}
 function formHTML(art, type, choose) {
   const types = ["Artwork Acquisition", "Gallery Enquiry", "Collaboration", "General Enquiry"];
   return `<form class="enq" novalidate>
@@ -579,6 +646,7 @@ function wireForm(root) {
   });
 }
 
+function viewContactSec() { return `<section class="sec" id="contact">${viewContact()}</section>`; }
 function viewContact() {
   const c = DATA.contact;
   return `<div class="page gutter"><div class="contact-split">
@@ -623,24 +691,39 @@ function slider() {
     let vel = -v * 16; const tick = () => { if (Math.abs(vel) < 0.5) return; t.scrollLeft += vel; vel *= 0.94; raf = requestAnimationFrame(tick); }; tick(); });
 }
 
+let lastRoute = null;
+function foldInit() {
+  main.querySelectorAll("[data-fold]").forEach(b => b.onclick = () => { b.closest(".fold").classList.add("open"); setTimeout(equalize, 60); });
+}
+function equalize() {
+  const L = main.querySelector('.card[href="#work-scarlet-leopard"] .art-hover'), B = main.querySelector('.card[href="#work-ben-and-jerrys-moment"] .art-hover');
+  if (!L || !B) return;
+  B.style.width = "";
+  const lw = L.getBoundingClientRect().width, cw = B.parentElement.getBoundingClientRect().width;
+  if (lw > 0 && cw > 0) B.style.width = Math.min(lw, cw) + "px";
+}
+window.addEventListener("resize", () => equalize());
+const SECTIONS = ["artworks", "archive", "about", "contact"];
 function render() {
   const hash = location.hash.slice(1) || "home";
   cleanup.forEach(f => f()); cleanup = [];
-  let route = hash, html;
-  if (hash.startsWith("work-")) { route = "artworks"; html = viewWork(hash.slice(5)); }
-  else html = ({ artworks: viewArtworks, archive: viewArchive, about: viewAbout, contact: viewContact }[hash] || viewHome)();
-  main.innerHTML = html;
-  window.scrollTo(0, 0);
-  document.querySelectorAll("[data-nav]").forEach(a => a.toggleAttribute("aria-current", a.dataset.nav === route));
-  closeMenu(); reveals(); slider(); wireForm(main);
+  const isWork = hash.startsWith("work-");
+  const route = isWork ? "work" : "home";
+  if (isWork) { main.innerHTML = viewWork(hash.slice(5)); window.scrollTo(0, 0); reveals(); wireForm(main); }
+  else if (route !== lastRoute) { main.innerHTML = viewHome(); reveals(); slider(); wireForm(main); foldInit(); equalize(); }
+  lastRoute = route;
+  if (!isWork) {
+    const t = SECTIONS.includes(hash) ? document.getElementById(hash) : null;
+    if (t) setTimeout(() => t.scrollIntoView({ behavior: "smooth" }), 40); else window.scrollTo(0, 0);
+  }
+  document.querySelectorAll("[data-dock]").forEach(a => a.classList.toggle("on", a.dataset.dock === hash));
 }
 
 /* Header + menu */
-const nav = document.getElementById("nav"), menu = document.getElementById("mobileMenu"), menuBtn = document.getElementById("menuBtn");
-function closeMenu() { nav.classList.remove("open"); menu.classList.remove("open"); menuBtn.setAttribute("aria-expanded", "false"); document.getElementById("menuLabel").textContent = "Menu"; }
-menuBtn.onclick = () => { const o = !menu.classList.contains("open"); nav.classList.toggle("open", o); menu.classList.toggle("open", o); menuBtn.setAttribute("aria-expanded", o); document.getElementById("menuLabel").textContent = o ? "Close" : "Menu"; };
+const nav = document.getElementById("nav");
+function closeMenu() {}
 let lastY = 0;
-window.addEventListener("scroll", () => { const y = scrollY; nav.classList.toggle("scrolled", y > 24); if (Math.abs(y - lastY) > 6) { nav.classList.toggle("hide", y > lastY && y > 240 && !menu.classList.contains("open")); lastY = y; } }, { passive: true });
+window.addEventListener("scroll", () => { const y = scrollY; nav.classList.toggle("scrolled", y > 24); if (Math.abs(y - lastY) > 6) { nav.classList.toggle("hide", y > lastY && y > 240); lastY = y; } }, { passive: true });
 
 /* In-page links that shouldn't change the view */
 document.addEventListener("click", e => {
