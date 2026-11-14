@@ -378,6 +378,9 @@ footer { border-top: 1px solid var(--line); padding-block: 80px 40px; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .reveal, .mask { opacity: 1; transform: none; clip-path: none; }
 }
+html, body { width: 100%; max-width: 100%; overflow-x: clip; }
+#main, #main > section, #main > div { min-width: 0; max-width: 100%; }
+@media (max-width: 767px) { .red-in > *, .red-sec .red-pic, .red-sec img, .gallery-band img { min-width: 0; max-width: 100%; } }
 </style>
 </head>
 <body>
