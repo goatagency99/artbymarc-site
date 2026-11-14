@@ -438,7 +438,7 @@ const card = (w, i, k, idx, sold) => `<a class="card reveal${idx >= 3 ? " h3" : 
 
 function viewHome() {
   const h = DATA.home, hero = byId[h.heroArtwork] || W[0], red = byId[h.redArtwork] || hero;
-  const slides = W.filter(w => w.slider), coll = W.filter(w => w.featured).slice(0, 12);
+  const coll = W.filter(w => w.featured).slice(0, 12);
   const lines = h.redHeading.split(/(?<=\.)\s+/).filter(Boolean);
   const a = DATA.about;
   return `
@@ -449,17 +449,7 @@ function viewHome() {
     </div>
     <div class="hero-art"><a class="enter-mask" style="--d:350ms;--r:${ratio(hero)}" href="#work-${hero.slug}" aria-label="View ${esc(hero.title)}">${img(hero, 'loading="eager"')}</a></div>
     <div class="hero-copy enter" style="--d:520ms"><p>${esc(h.heroSubtext)}</p><a class="btn btn-dark" href="#artworks">${esc(h.heroCta)} ${arrow}</a></div>
-    <a class="cue label muted" href="#sliderTitle" data-scroll><span></span>Scroll</a>
-  </section>
-
-  <section class="slider-sec" aria-labelledby="sliderTitle">
-    <div class="sec-head gutter"><div><p class="label muted" style="margin-bottom:20px">01 — Exhibition</p><h2 id="sliderTitle" class="display">${esc(h.sliderHeading)}</h2></div>
-      <div class="arrows"><button class="arrow-btn" data-prev aria-label="Previous artworks">${svgArrow("prev")}</button><button class="arrow-btn" data-next aria-label="Next artworks">${svgArrow("next")}</button></div></div>
-    <div class="track" id="track" tabindex="0" role="region" aria-roledescription="carousel" aria-label="Selected works. Drag, swipe or use the arrow keys.">
-      ${slides.map((w, i) => `<a class="slide" style="${slideFrame(w)}" href="#work-${w.slug}" draggable="false"><div class="art-hover">${img(w, "", true)}</div><div class="cap"><span class="label muted">${String(i + 1).padStart(2, "0")}</span><span class="t"><span class="link-line">${esc(w.title)}</span></span></div></a>`).join("")}
-      <span style="flex:none;width:1px"></span>
-    </div>
-    <div class="slider-foot gutter"><div class="progress"><span id="prog"></span></div><div class="arrows"><button class="arrow-btn" data-prev aria-label="Previous artworks">${svgArrow("prev")}</button><button class="arrow-btn" data-next aria-label="Next artworks">${svgArrow("next")}</button></div></div>
+    <a class="cue label muted" href="#artTitle" data-scroll><span></span>Scroll</a>
   </section>
 
   ${viewArtworksSec()}
